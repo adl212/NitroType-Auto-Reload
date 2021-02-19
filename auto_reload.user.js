@@ -9,12 +9,12 @@
 // @grant        none
 // ==/UserScript==
 
-(() => {
+const options = {
+    intervalMs: 100,             // Recommended milliseconds
+    reloadWhenDisqualified: true // Can be changed to false
+};
 
-    const options = {
-        intervalMs: 100,             // Recommended milliseconds
-        reloadWhenDisqualified: true // Can be changed to false
-    };
+(() => {
 
     const client = () => {
 
