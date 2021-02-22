@@ -1,39 +1,72 @@
 // ==UserScript==
 // @name         NitroType Auto Reload
 // @namespace    https://github.com/Ray-Adams
-// @version      1.1.0
+// @version      2.0.0
 // @description  Automatically reloads the page at the end of each race.
 // @author       Ray Adams
-// @match        *://www.nitrotype.com/race
+// @match        *://*.nitrotype.com/race
 // @run-at       document-end
 // @grant        none
 // ==/UserScript==
 
 const options = {
-    intervalMs: 100,             // Recommended milliseconds
-    reloadWhenDisqualified: true // Can be changed to false
+    timerMs: 1000,
+    reloadWhenDisqualified: true
 };
 
 (() => {
 
-    const client = () => {
+    'use strict';
 
-        let btn = {
-            Dqed: options.reloadWhenDisqualified ? document.getElementsByClassName('btn btn--light btn--fw')[1] : null,
-            Finished: document.getElementsByClassName('btn btn--primary btn--fw btn--gloss animate--iconSlam dhf')[0]
-        };
+    let letters, lastLetter;
 
-        if (document.body.contains(btn.Dqed || btn.Finished)) {
+    if (options.reloadWhenDisqualified) {
 
-            clearInterval(intervalId);
-            location.reload();
+        const dqObserver = new MutationObserver(() => {
+            if (document.querySelector('.modal--error')) {
+
+                dqObserver.disconnect();
+
+                location.reload();
+
+            }
+        });
+
+        dqObserver.observe(raceContainer, {childList: true});
+
+    }
+
+    const lessonObserver = new MutationObserver(() => {
+
+        if (document.querySelector('.dash-copy')) {
+
+            lessonObserver.disconnect();
+
+            letters = document.querySelectorAll('.dash-letter'),
+            lastLetter = letters[letters.length - 2];
+
+            lastLetterObserver.observe(lastLetter, {attributes: true});
 
         }
 
-    };
+    });
 
-    const intervalId = setInterval(client, options.intervalMs);
+    const lastLetterObserver = new MutationObserver((mutations) => {
 
-    console.info('Auto Reload Activated.')
+        for (let mutation of mutations) {
+            if (mutation.target.getAttribute('class').includes('is-correct')) {
+
+                lastLetterObserver.disconnect();
+
+                setTimeout(() => location.reload(), options.timerMs);
+
+            }
+        }
+
+    });
+
+    lessonObserver.observe(document.querySelector('.dash-center'), {childList: true});
+
+    console.info('Auto Reload Activated.');
 
 })()
