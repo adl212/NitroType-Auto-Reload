@@ -8,14 +8,17 @@ A NitroType userscript that automatically reloads the page at the end of each ra
 ## Options
 ```js
 const options = {
-    intervalMs: 100,             
+    timerMs: 1000,             
     reloadWhenDisqualified: true
 };
 ```
-If you're using a *low-end device*, it may be a good idea to set `intervalMs` to a higher value, such as `500` for example.
+If your internet is slow, you may need to increase the value of `timerMs`.
 By default, the script will reload tabs that have DQed, however, you can set `reloadWhenDisqualified` to `false` to turn it off.
 
 ## Release History
+* 2.0.0
+  * Implemented Mutation Observer API
+  * Increased efficiency
 * 1.1.0
   * Major refactor
   * Added options
