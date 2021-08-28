@@ -23,7 +23,7 @@ const options = {
     if (options.reloadWhenDisqualified) {
 
         const dqObserver = new MutationObserver(() => {
-            if (document.querySelector('.modal--error')) {
+            if (document.querySelector('.modal--error,.modal-container')) {
 
                 dqObserver.disconnect();
 
